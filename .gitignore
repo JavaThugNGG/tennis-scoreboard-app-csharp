@@ -1,0 +1,77 @@
+################################################################################
+# .gitignore дл€ ASP.NET Core MVC проекта
+# ѕоложить в корень решени€ (TennisScoreboard/)
+################################################################################
+
+# Visual Studio / Rider / IDE
+.vs/
+.vscode/
+.idea/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results (дл€ проекта TennisScoreboard)
+TennisScoreboard/bin/
+TennisScoreboard/obj/
+TennisScoreboard/Debug/
+TennisScoreboard/Release/
+TennisScoreboard/x64/
+TennisScoreboard/x86/
+TennisScoreboard/bld/
+TennisScoreboard/log/
+TennisScoreboard/logs/
+
+# Publish outputs
+TennisScoreboard/publish/
+TennisScoreboard/out/
+TennisScoreboard/artifacts/
+
+# ASP.NET Scaffolding
+TennisScoreboard/ScaffoldingReadMe.txt
+
+# Entity Framework Core Migrations
+TennisScoreboard/[Mm]igrations/
+
+# Node / frontend dependencies
+TennisScoreboard/node_modules/
+TennisScoreboard/wwwroot/lib/
+
+# Local development configuration and secrets
+TennisScoreboard/appsettings.Development.json
+TennisScoreboard/secrets.json
+
+# Local tooling / DB files
+TennisScoreboard/*.dbmdl
+TennisScoreboard/*.bak
+TennisScoreboard/*.ldf
+TennisScoreboard/*.mdf
+
+# Test results
+TennisScoreboard/_TestResults/
+TennisScoreboard/TestResult*/
+
+# Launch settings
+TennisScoreboard/Properties/launchSettings.json
+
+# Misc
+TennisScoreboard/*.aps
+TennisScoreboard/*.ilk
+TennisScoreboard/*.tlog
+TennisScoreboard/*.tmp
+TennisScoreboard/*.tmp_proj
+TennisScoreboard/*.exe
+TennisScoreboard/*.dll
+TennisScoreboard/*.pdb
+TennisScoreboard/*.obj
+TennisScoreboard/*.idb
+TennisScoreboard/*.pch
+TennisScoreboard/*.vspscc
+TennisScoreboard/*.vssscc
+TennisScoreboard/*_i.c
+TennisScoreboard/*_p.c
+TennisScoreboard/*.nupkg
+TennisScoreboard/*.snupkg
