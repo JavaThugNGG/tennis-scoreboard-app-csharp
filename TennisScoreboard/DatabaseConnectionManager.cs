@@ -14,9 +14,10 @@ namespace TennisScoreboard
             _connection = new SqliteConnection(_connectionString);
         }
 
-        public void OpenPersistent()
+        public SqliteConnection OpenPersistent()
         {
             _connection.Open();
+            return _connection;
         }
 
         public void Dispose()
