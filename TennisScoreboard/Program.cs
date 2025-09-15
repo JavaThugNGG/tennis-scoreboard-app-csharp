@@ -1,3 +1,7 @@
+п»їusing System.Diagnostics;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+
 namespace TennisScoreboard
 {
     public class Program
@@ -8,31 +12,48 @@ namespace TennisScoreboard
 
             builder.Services.AddControllersWithViews();
 
+            var connection = new SqliteConnection("Data Source=InMemoryDb;Mode=Memory;Cache=Shared");
+            connection.Open();
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlite(connection);
+            });
+
             var app = builder.Build();
 
-            /*
-            if (!app.Environment.IsDevelopment())
+            using (var scope = app.Services.CreateScope())
             {
-                app.UseExceptionHandler("/Home/Error");
-            }*/
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                db.Database.EnsureCreated();
 
+                Debug.WriteLine("РўР°Р±Р»РёС†С‹ РІ Р±Р°Р·Рµ:");//РІ Р»РѕРі РїРѕС‚РѕРј
+                var conn = db.Database.GetDbConnection();
+                using var command = conn.CreateCommand();
+                command.CommandText = "SELECT name FROM sqlite_master WHERE type='table';";
+                using var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    Debug.WriteLine(reader.GetString(0));
+                }
+            }
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
 
-            app.UseRouting();//сопоставляет url с маршрутами(готовься к маршрутизации)
+            app.UseRouting();
 
-            app.MapControllerRoute(//определение шаблона маршрутов(вместе это все позволяет правильно направлять запросы на нужные ендпоинты)
+            app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+
+            app.Lifetime.ApplicationStopping.Register(() =>
+            {
+                connection.Dispose();
+            });
 
             app.Run();
         }
     }
 }
-
-
-
-
-
-
