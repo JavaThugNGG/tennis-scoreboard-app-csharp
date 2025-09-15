@@ -5,27 +5,25 @@ namespace TennisScoreboard
 {
     public class DatabaseInitializer
     {
+        private readonly IDbContextFactory<AppDbContext> _factory;
+
+        public DatabaseInitializer(IDbContextFactory<AppDbContext> factory)
+        {
+            _factory = factory;
+        }
+
         public void Init(WebApplication app)
         {
-            using var scope = app.Services.CreateScope();
-            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            using var db = _factory.CreateDbContext();
             db.Database.EnsureCreated();
 
-            Debug.WriteLine("Таблицы в базе:");//в лог
-            var conn = db.Database.GetDbConnection();
-            using var command = conn.CreateCommand();
+            Debug.WriteLine("Таблицы в базе:");
+            var tables = db.Model.GetEntityTypes()
+                .Select(t => t.GetTableName())
+                .Distinct();
 
-            command.CommandText = @"
-               SELECT name 
-               FROM sqlite_master 
-               WHERE type='table';
-            ";
-
-            using var reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                Debug.WriteLine(reader.GetString(0));//в лог
-            }
+            foreach (var table in tables)
+                Debug.WriteLine(table);
         }
     }
 }
