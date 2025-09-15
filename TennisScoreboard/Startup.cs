@@ -14,8 +14,15 @@ namespace TennisScoreboard
             var dbConnectionManager = new DatabaseConnectionManager(connectionString);
             dbConnectionManager.OpenPersistent();
 
-            builder.Services.AddSingleton(connectionString);
             builder.Services.AddSingleton(dbConnectionManager);
+            builder.Services.AddSingleton<DatabaseInitializer>();
+            builder.Services.AddSingleton<PlayerValidator>();
+            builder.Services.AddSingleton<PlayerDao>();
+            builder.Services.AddSingleton<PlayerService>();
+            builder.Services.AddSingleton<MatchPreparingService>();
+            builder.Services.AddSingleton<OngoingMatchesService>();
+            builder.Services.AddSingleton<ErrorDtoBuilder>();
+            builder.Services.AddSingleton<StatusCodeProcessor>();
 
             builder.Services.AddDbContextFactory<AppDbContext>(options =>
             {
@@ -41,11 +48,11 @@ namespace TennisScoreboard
         public void ConfigureApplicationLifetime(WebApplication app)
         {
             var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
-            var dbManager = app.Services.GetRequiredService<DatabaseConnectionManager>();
+            var dbConnectionManager = app.Services.GetRequiredService<DatabaseConnectionManager>();
 
             lifetime.ApplicationStopping.Register(() =>
             {
-                dbManager.Dispose();
+                dbConnectionManager.Dispose();
             });
         }
     }
