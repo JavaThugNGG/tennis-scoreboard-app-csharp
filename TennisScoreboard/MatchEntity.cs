@@ -15,7 +15,7 @@ namespace TennisScoreboard
         public int Player2Id { get; set; }
         public PlayerEntity Player2 { get; set; }
 
-        public int? WinnerId { get; set; } // может быть null, если матч не завершён
+        public int? WinnerId { get; set; }
         public PlayerEntity Winner { get; set; }
     }
 }
