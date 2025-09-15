@@ -17,7 +17,7 @@ namespace TennisScoreboard
             builder.Services.AddSingleton(connectionString);
             builder.Services.AddSingleton(dbConnectionManager);
 
-            builder.Services.AddDbContext<AppDbContext>(options =>
+            builder.Services.AddDbContextFactory<AppDbContext>(options =>
             {
                 options.UseSqlite(connectionString);
             });
