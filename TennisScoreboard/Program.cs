@@ -1,24 +1,30 @@
 ﻿namespace TennisScoreboard
 {
-    public class Program
+    namespace TennisScoreboard
     {
-        public static void Main(string[] args)
+        public class Program
         {
-            var builder = WebApplication.CreateBuilder(args);
+            public static void Main(string[] args)
+            {
+                var builder = WebApplication.CreateBuilder(args);
 
-            var startUp = new Startup();
-            startUp.ConfigureServices(builder);
+                var startUp = new Startup();
+                startUp.ConfigureServices(builder);
 
-            var app = builder.Build();
+                var app = builder.Build();
 
-            var databaseInitializer = new DatabaseInitializer();
-            databaseInitializer.Init(app);
+                using (var scope = app.Services.CreateScope())
+                {
+                    var initializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+                    initializer.Init(app);
+                }
 
-            startUp.ConfigureStaticFiles(app);
-            startUp.ConfigureRouting(app);
-            startUp.ConfigureApplicationLifetime(app);
+                startUp.ConfigureStaticFiles(app);
+                startUp.ConfigureRouting(app);
+                startUp.ConfigureApplicationLifetime(app);
 
-            app.Run();
+                app.Run();
+            }
         }
     }
 }
