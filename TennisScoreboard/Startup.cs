@@ -14,7 +14,7 @@ namespace TennisScoreboard
             var dbConnectionManager = new DatabaseConnectionManager(connectionString);
             dbConnectionManager.OpenPersistent();
 
-            builder.Services.AddSingleton(dbConnectionManager);
+            builder.Services.AddSingleton(dbConnectionManager);   //TODO: расставить в красивом порядке
             builder.Services.AddSingleton<DatabaseInitializer>();
             builder.Services.AddSingleton<PlayerValidator>();
             builder.Services.AddSingleton<PlayerDao>();
@@ -23,6 +23,17 @@ namespace TennisScoreboard
             builder.Services.AddSingleton<OngoingMatchesService>();
             builder.Services.AddSingleton<ErrorDtoBuilder>();
             builder.Services.AddSingleton<StatusCodeProcessor>();
+            builder.Services.AddSingleton<MatchStateService>();
+            builder.Services.AddSingleton<MatchScoreCalculationService>();
+            builder.Services.AddSingleton<MatchFinishingService>();
+            builder.Services.AddSingleton<FinishedMatchProcessingService>();
+            builder.Services.AddSingleton<MatchValidator>();
+            builder.Services.AddSingleton<PlayerValidator>();
+            builder.Services.AddSingleton<MatchProcessor>();
+            builder.Services.AddSingleton<PlayerProcessor>();
+            builder.Services.AddSingleton<ErrorDtoBuilder>();
+            builder.Services.AddSingleton<MatchParser>();
+            builder.Services.AddSingleton<PlayerParser>();
 
             builder.Services.AddDbContextFactory<AppDbContext>(options =>
             {
