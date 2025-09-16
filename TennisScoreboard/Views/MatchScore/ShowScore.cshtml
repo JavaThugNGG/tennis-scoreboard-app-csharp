@@ -1,0 +1,82 @@
+﻿@model TennisScoreboard.MatchScoreModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tennis Scoreboard | Match Score</title>
+    <link rel="stylesheet" href="css/site.css" />
+    <script src="js/app.js"></script>
+</head>
+<body>
+    <header class="header">
+        <section class="nav-header">
+            <div class="brand">
+                <div class="nav-toggle">
+                    <img src="images/menu.png" alt="Logo" class="logo" />
+                </div>
+                <span class="logo-text">TennisScoreboard</span>
+            </div>
+            <nav class="nav-links">
+                <a class="nav-link" href="./">Home</a>
+                <a class="nav-link" href="./matches">Matches</a>
+            </nav>
+        </section>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Current match</h1>
+            <div class="current-match-image"></div>
+            <section class="score">
+                <table class="table">
+                    <thead class="result">
+                        <tr>
+                            <th>Player</th>
+                            <th>Sets</th>
+                            <th>Games</th>
+                            <th>Points</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="player1">
+                            <td>@Model.FirstPlayerId</td>
+                            <td>@Model.FirstPlayerSets</td>
+                            <td>@Model.FirstPlayerGames</td>
+                            <td>@Model.DisplayFirstPlayerPoints()</td>
+                            <td>
+                                <form method="post" action="#">
+                                    <input type="hidden" name="uuid" value="@Model.FirstPlayerId" />
+                                    <input type="hidden" name="scoredPlayerId" value="@Model.FirstPlayerId" />
+                                    <button class="score-btn" type="submit">Score</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr class="player2">
+                            <td>@Model.SecondPlayerId</td>
+                            <td>@Model.SecondPlayerSets</td>
+                            <td>@Model.SecondPlayerGames</td>
+                            <td>@Model.DisplaySecondPlayerPoints()</td>
+                            <td>
+                                <form method="post" action="#">
+                                    <input type="hidden" name="uuid" value="@Model.SecondPlayerId" />
+                                    <input type="hidden" name="scoredPlayerId" value="@Model.SecondPlayerId" />
+                                    <button class="score-btn" type="submit">Score</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer">
+            <p>&copy; Tennis Scoreboard, project from <a href="https://zhukovsd.github.io/java-backend-learning-course/">zhukovsd/java-backend-learning-course</a> roadmap.</p>
+        </div>
+    </footer>
+</body>
+</html>
