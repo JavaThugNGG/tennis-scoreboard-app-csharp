@@ -30,8 +30,16 @@ namespace TennisScoreboard
             {
                 throw new ArgumentException("Некорректное значение id игрока: " + id);
             }
+        }
 
-            if (!Regex.IsMatch(id, @"[a-zA-Zа-яА-ЯёЁ\- ]+"))
+        public void ValidateNameFilter(string filter)
+        {
+            if (string.IsNullOrWhiteSpace(filter))
+            {
+                throw new ArgumentException("Некорректный фильтр - пустая строка");
+            }
+
+            if (!Regex.IsMatch(filter, @"[a-zA-Zа-яА-ЯёЁ\- ]+"))
             {
                 throw new IllegalPlayerNameFilterException("Фильтр содержит недопустимые символы");
             }
