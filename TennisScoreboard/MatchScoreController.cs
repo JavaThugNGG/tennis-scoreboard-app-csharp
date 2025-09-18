@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 
 namespace TennisScoreboard
 {
@@ -20,14 +19,12 @@ namespace TennisScoreboard
         private readonly MatchProcessor _matchProcessor;
         private readonly PlayerProcessor _playerProcessor;
 
-        private readonly ErrorDtoBuilder _errorDtoBuilder;
-
         public MatchScoreController(OngoingMatchesService ongoingMatchesService, MatchStateService matchStateService,
             MatchScoreCalculationService matchScoreCalculationService,
             FinishedMatchProcessingService finishedMatchProcessingService, MatchValidator matchValidator,
             PlayerValidator playerValidator,
             MatchParser matchParser, PlayerParser playerParser, MatchProcessor matchProcessor,
-            PlayerProcessor playerProcessor, ErrorDtoBuilder errorDtoBuilder)
+            PlayerProcessor playerProcessor)
         {
             _ongoingMatchesService = ongoingMatchesService;
             _matchStateService = matchStateService;
@@ -39,7 +36,6 @@ namespace TennisScoreboard
             _playerParser = playerParser;
             _matchProcessor = matchProcessor;
             _playerProcessor = playerProcessor;
-            _errorDtoBuilder = errorDtoBuilder;
         }
 
         [HttpGet]
@@ -49,17 +45,13 @@ namespace TennisScoreboard
             {
                 _matchValidator.ValidateGuid(guid);
                 Guid parsedGuid = _matchParser.ParseGuid(guid);
-                MatchScoreModel currentMatch =
-                    _matchProcessor.FindMatch(_ongoingMatchesService.CurrentMatches, parsedGuid);
-
+                MatchScoreModel currentMatch = _matchProcessor.FindMatch(_ongoingMatchesService.CurrentMatches, parsedGuid);
                 return View(currentMatch);
             }
+            
             catch (ArgumentException ex)
             {
-                // Обработка некорректного UUID
-                ViewBag.ErrorMessage = ex.Message;
-                Response.StatusCode = 400; // Bad Request
-                return Redirect("new-match"); // тут должно быть существующее представление
+                return HandleIllegalArguments(ex);
             }
         }
 
@@ -79,7 +71,7 @@ namespace TennisScoreboard
             }
             catch (ArgumentException ex)
             {
-                return HandleIllegalArguments(ex, guid, scoredPlayerId);
+                return HandleIllegalArguments(ex);
             }
 
             IReadOnlyDictionary<Guid, MatchScoreModel> currentMatches = _ongoingMatchesService.CurrentMatches;
@@ -90,8 +82,7 @@ namespace TennisScoreboard
             {
                 _matchScoreCalculationService.Scoring(currentMatch, scorerSide);
                 _matchStateService.EnsureNotFinished(currentMatch);
-                //тут логгер
-                return Redirect("/match-score?guid=" + matchGuid);
+                return RedirectToAction("ShowScore", new { guid = matchGuid });
             }
             catch (MatchAlreadyFinishedException ex)
             {
@@ -116,11 +107,11 @@ namespace TennisScoreboard
         }
 
         
-        private IActionResult HandleIllegalArguments(Exception ex, string guid, string scoredPlayerId)
+        private IActionResult HandleIllegalArguments(Exception ex)
         {
-            var error = _errorDtoBuilder.Build(ex);
-            ViewData["ErrorMessage"] = error.Message;
-            return Redirect("NewMatch");//error не выводится!!!
+            ViewData["ErrorMessage"] = ex.Message;
+            Response.StatusCode = 400;
+            return View();
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model TennisScoreboard.MatchScoreModel
+﻿@model TennisScoreboard.MatchScoreModel?
 
 <!DOCTYPE html>
 <html lang="en">
@@ -28,6 +28,12 @@
     <main>
         <div class="container">
             <h1>Current match</h1>
+            
+            @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+            {
+                <p style="color: red;">@ViewData["ErrorMessage"]</p>
+            }
+
             <div class="current-match-image"></div>
             <section class="score">
                 <table class="table">
@@ -42,27 +48,27 @@
                     </thead>
                     <tbody>
                         <tr class="player1">
-                            <td>@Model.FirstPlayerId</td>
-                            <td>@Model.FirstPlayerSets</td>
-                            <td>@Model.FirstPlayerGames</td>
-                            <td>@Model.DisplayFirstPlayerPoints()</td>
+                            <td>@Model?.FirstPlayerId</td>
+                            <td>@Model?.FirstPlayerSets</td>
+                            <td>@Model?.FirstPlayerGames</td>
+                            <td>@Model?.DisplayFirstPlayerPoints()</td>
                             <td>
                                 <form method="post" action="#">
-                                    <input type="hidden" name="uuid" value="@Model.FirstPlayerId" />
-                                    <input type="hidden" name="scoredPlayerId" value="@Model.FirstPlayerId" />
+                                    <input type="hidden" name="uuid" value="@Model?.FirstPlayerId" />
+                                    <input type="hidden" name="scoredPlayerId" value="@Model?.FirstPlayerId" />
                                     <button class="score-btn" type="submit">Score</button>
                                 </form>
                             </td>
                         </tr>
                         <tr class="player2">
-                            <td>@Model.SecondPlayerId</td>
-                            <td>@Model.SecondPlayerSets</td>
-                            <td>@Model.SecondPlayerGames</td>
-                            <td>@Model.DisplaySecondPlayerPoints()</td>
+                            <td>@Model?.SecondPlayerId</td>
+                            <td>@Model?.SecondPlayerSets</td>
+                            <td>@Model?.SecondPlayerGames</td>
+                            <td>@Model?.DisplaySecondPlayerPoints()</td>
                             <td>
                                 <form method="post" action="#">
-                                    <input type="hidden" name="uuid" value="@Model.SecondPlayerId" />
-                                    <input type="hidden" name="scoredPlayerId" value="@Model.SecondPlayerId" />
+                                    <input type="hidden" name="uuid" value="@Model?.SecondPlayerId" />
+                                    <input type="hidden" name="scoredPlayerId" value="@Model?.SecondPlayerId" />
                                     <button class="score-btn" type="submit">Score</button>
                                 </form>
                             </td>
