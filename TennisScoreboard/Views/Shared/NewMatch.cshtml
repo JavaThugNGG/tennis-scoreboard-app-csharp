@@ -40,7 +40,7 @@
                 <div class="new-match-image"></div>
                 <div class="form-container center">
                     <form method="post" asp-action="Create" asp-controller="NewMatch">
-                        @if (!string.IsNullOrEmpty(ViewData["ErrorMessage"] as string))
+                        @if (ViewData["ErrorMessage"] != null)
                         {
                             <p style="color: red;">@ViewData["ErrorMessage"]</p>
                         }
