@@ -80,9 +80,17 @@ namespace TennisScoreboard
 
             try
             {
-                _matchScoreCalculationService.Scoring(currentMatch, scorerSide);
-                _matchStateService.EnsureNotFinished(currentMatch);
-                return RedirectToAction("ShowScore", new { guid = matchGuid });
+                lock (currentMatch.Lock)
+                {
+                    if (currentMatch.Finished)
+                        return HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
+                    {
+                        _matchScoreCalculationService.Scoring(currentMatch, scorerSide);
+                        _matchStateService.EnsureNotFinished(currentMatch);
+                    }
+                    return RedirectToAction("ShowScore", new { guid = matchGuid });
+                }
+
             }
             catch (MatchAlreadyFinishedException ex)
             {
@@ -94,16 +102,13 @@ namespace TennisScoreboard
         {
             lock (currentMatch.Lock)
             {
-                if (!currentMatch.Finished)
-                {
+
                     FinishedMatchViewDto finishedMatch = _finishedMatchProcessingService.HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
 
                     currentMatch.Finished = true;
                     //тут логгер
                     return View("MatchResult", finishedMatch);
-                }
             }
-            return RedirectToAction("ShowScore", new { guid = matchGuid });
         }
 
         
