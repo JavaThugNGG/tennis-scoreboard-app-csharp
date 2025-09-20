@@ -14,11 +14,13 @@ namespace TennisScoreboard
             var dbConnectionManager = new DatabaseConnectionManager(connectionString);
             dbConnectionManager.OpenPersistent();
 
-            builder.Services.AddSingleton(dbConnectionManager);   //TODO: расставить в красивом порядке
+            builder.Services.AddSingleton(dbConnectionManager);   //TODO: расставить в красивом порядке, player под player, match под match
             builder.Services.AddSingleton<DatabaseInitializer>();
             builder.Services.AddSingleton<PlayerValidator>();
             builder.Services.AddSingleton<PlayerDao>();
+            builder.Services.AddSingleton<MatchDao>();
             builder.Services.AddSingleton<PlayerService>();
+            builder.Services.AddSingleton<MatchService>();
             builder.Services.AddSingleton<MatchPreparingService>();
             builder.Services.AddSingleton<OngoingMatchesService>();
             builder.Services.AddSingleton<ErrorDtoBuilder>();
@@ -34,6 +36,19 @@ namespace TennisScoreboard
             builder.Services.AddSingleton<ErrorDtoBuilder>();
             builder.Services.AddSingleton<MatchParser>();
             builder.Services.AddSingleton<PlayerParser>();
+
+            builder.Services.AddSingleton<PageProcessor>();
+            builder.Services.AddSingleton<PageValidator>();
+            builder.Services.AddSingleton<PageParser>();
+
+            builder.Services.AddSingleton<MatchPageViewDtoBuilder>();
+
+            builder.Services.Configure<PaginationSettings>(builder.Configuration.GetSection("Pagination"));
+
+            builder.Services.AddSingleton<MatchPageViewCalculator>();
+            builder.Services.AddSingleton<MatchPageViewService>();
+            builder.Services.AddSingleton<MatchesSummaryService>();
+
 
             builder.Services.AddDbContextFactory<AppDbContext>(options =>
             {
