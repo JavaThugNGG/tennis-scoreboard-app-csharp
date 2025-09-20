@@ -1,8 +1,4 @@
 ﻿namespace TennisScoreboard
 {
-    public record MatchPageViewDto(
-        IDictionary<String, String> MatchAttributes,
-        int CurrentPage,
-        int TotalPages
-    );
+    public record MatchPageViewDto(IDictionary<string, string> MatchAttributes, int CurrentPage, int TotalPages);
 }
