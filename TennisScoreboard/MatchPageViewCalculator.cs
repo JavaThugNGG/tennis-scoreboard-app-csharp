@@ -1,12 +1,14 @@
-﻿namespace TennisScoreboard
+﻿using Microsoft.Extensions.Options;
+
+namespace TennisScoreboard
 {
     public class MatchPageViewCalculator
     {
         private readonly int _matchesPerPage;
 
-        public MatchPageViewCalculator(int matchesPerPage)
+        public MatchPageViewCalculator(IOptions<PaginationSettings> matchesPerPage)
         {
-            _matchesPerPage = matchesPerPage;
+            _matchesPerPage = matchesPerPage.Value.MatchesPerPage;
         }
 
         public int GetStartIndex(int currentPage)
