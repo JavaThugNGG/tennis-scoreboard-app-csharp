@@ -103,11 +103,17 @@ namespace TennisScoreboard
             lock (currentMatch.Lock)
             {
 
+                if (currentMatch.Finished)
+                {
+                    return StatusCode(409, "Match has already finished.");
+                }
+  
                     FinishedMatchViewDto finishedMatch = _finishedMatchProcessingService.HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
 
                     currentMatch.Finished = true;
                     //тут логгер
                     return View("MatchResult", finishedMatch);
+                
             }
         }
 
