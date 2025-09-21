@@ -7,9 +7,7 @@ namespace TennisScoreboard
         public DbSet<PlayerEntity> Players { get; set; }
         public DbSet<MatchEntity> Matches { get; set; }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-        {
-        }
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
