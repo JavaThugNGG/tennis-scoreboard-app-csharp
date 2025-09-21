@@ -5,6 +5,7 @@
         public MatchScoreModel FindMatch(IReadOnlyDictionary<Guid, MatchScoreModel> currentMatches, Guid guid)
         {
             MatchScoreModel currentMatch = currentMatches[guid];
+
             if (currentMatch == null)
             {
                 //лог ошибки
