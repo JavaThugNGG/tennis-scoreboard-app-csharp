@@ -36,9 +36,6 @@ namespace TennisScoreboard
             builder.Services.AddSingleton<MatchValidator>();
             builder.Services.AddSingleton<MatchParser>();
 
-            builder.Services.AddSingleton<ErrorDtoBuilder>();
-            builder.Services.AddSingleton<StatusCodeProcessor>();
-            
             builder.Services.AddSingleton<PageProcessor>();
             builder.Services.AddSingleton<PageValidator>();
             builder.Services.AddSingleton<PageParser>();
