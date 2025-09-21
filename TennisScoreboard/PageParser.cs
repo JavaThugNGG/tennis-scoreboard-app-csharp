@@ -8,7 +8,6 @@
             {
                 return page;
             }
-
             throw new ArgumentException("Некорректный параметр страницы!");
         }
     }
