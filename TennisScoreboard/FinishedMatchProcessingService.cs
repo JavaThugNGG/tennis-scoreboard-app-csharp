@@ -13,7 +13,7 @@
 
         public FinishedMatchViewDto HandleFinishedMatch(MatchScoreModel currentMatch, PlayerSide winnerSide, Guid matchGuid)
         {
-            PlayersResultDto playersResult = _matchFinishingService.PersistMatch(currentMatch, winnerSide);
+            PlayersResultDto playersResult = _matchFinishingService.PersistMatch(currentMatch, winnerSide, matchGuid);
             _ongoingMatchesService.RemoveMatchWithDelay(matchGuid, 1);
             return new FinishedMatchViewDto(currentMatch, playersResult);
         }

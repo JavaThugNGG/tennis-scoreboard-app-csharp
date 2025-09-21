@@ -5,14 +5,21 @@ namespace TennisScoreboard
     public class MatchFinishingService
     {
         private readonly IDbContextFactory<AppDbContext> _contextFactory;
+        private readonly OngoingMatchesService _ongoingMatchesService;
 
-        public MatchFinishingService(IDbContextFactory<AppDbContext> contextFactory)
+        public MatchFinishingService(IDbContextFactory<AppDbContext> contextFactory, OngoingMatchesService ongoingMatchesService)
         {
             _contextFactory = contextFactory;
+            _ongoingMatchesService = ongoingMatchesService;
         }
 
-        public PlayersResultDto PersistMatch(MatchScoreModel match, PlayerSide winner)
+        public PlayersResultDto PersistMatch(MatchScoreModel match, PlayerSide winner, Guid matchGuid)
         {
+            if (_ongoingMatchesService.PersistedMatches.ContainsKey(matchGuid))
+            {
+                return DeterminePlayersResult(winner);
+            }
+
             int firstPlayerId = match.FirstPlayerId;
             int secondPlayerId = match.SecondPlayerId;
 
@@ -27,6 +34,8 @@ namespace TennisScoreboard
 
                 context.Matches.Add(matchEntity);
                 context.SaveChanges();
+
+                _ongoingMatchesService.MarkMatchAsPersisted(matchGuid);
 
                 Console.WriteLine($"Match persisted successfully: matchId={matchEntity.Id}, winner={winner}");
 

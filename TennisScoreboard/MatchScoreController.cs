@@ -79,15 +79,11 @@ namespace TennisScoreboard
             PlayerSide scorerSide = _playerProcessor.DetermineScorerSide(currentMatch, scoredId);
 
             try
-            {
+            {       
                 lock (currentMatch.Lock)
                 {
-                    if (currentMatch.Finished)
-                        return HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
-                    {
-                        _matchScoreCalculationService.Scoring(currentMatch, scorerSide);
-                        _matchStateService.EnsureNotFinished(currentMatch);
-                    }
+                    _matchScoreCalculationService.Scoring(currentMatch, scorerSide);
+                    _matchStateService.EnsureNotFinished(currentMatch);
                     return RedirectToAction("ShowScore", new { guid = matchGuid });
                 }
 
@@ -102,13 +98,7 @@ namespace TennisScoreboard
         {
             lock (currentMatch.Lock)
             {
-
-                if (currentMatch.Finished)
-                {
-                    return StatusCode(409, "Match has already finished.");
-                }
-  
-                    FinishedMatchViewDto finishedMatch = _finishedMatchProcessingService.HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
+                FinishedMatchViewDto finishedMatch = _finishedMatchProcessingService.HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
 
                     currentMatch.Finished = true;
                     //тут логгер
