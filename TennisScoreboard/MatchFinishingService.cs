@@ -36,7 +36,6 @@ namespace TennisScoreboard
                 context.SaveChanges();
 
                 _ongoingMatchesService.MarkMatchAsPersisted(matchGuid);
-
                 Console.WriteLine($"Match persisted successfully: matchId={matchEntity.Id}, winner={winner}");
 
                 return DeterminePlayersResult(winner);
