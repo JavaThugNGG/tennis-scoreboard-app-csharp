@@ -143,6 +143,5 @@
                 return PlayerSide.First;
             }
         }
-
     }
 }
