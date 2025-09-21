@@ -14,41 +14,40 @@ namespace TennisScoreboard
             var dbConnectionManager = new DatabaseConnectionManager(connectionString);
             dbConnectionManager.OpenPersistent();
 
-            builder.Services.AddSingleton(dbConnectionManager);   //TODO: расставить в красивом порядке, player под player, match под match
+            builder.Services.AddSingleton(dbConnectionManager);
             builder.Services.AddSingleton<DatabaseInitializer>();
+
             builder.Services.AddSingleton<PlayerValidator>();
             builder.Services.AddSingleton<PlayerDao>();
-            builder.Services.AddSingleton<MatchDao>();
             builder.Services.AddSingleton<PlayerService>();
+            builder.Services.AddSingleton<PlayerValidator>();
+            builder.Services.AddSingleton<PlayerProcessor>();
+            builder.Services.AddSingleton<PlayerParser>();
+
+            builder.Services.AddSingleton<MatchDao>();
             builder.Services.AddSingleton<MatchService>();
+            builder.Services.AddSingleton<MatchProcessor>();
             builder.Services.AddSingleton<MatchPreparingService>();
             builder.Services.AddSingleton<OngoingMatchesService>();
-            builder.Services.AddSingleton<ErrorDtoBuilder>();
-            builder.Services.AddSingleton<StatusCodeProcessor>();
             builder.Services.AddSingleton<MatchStateService>();
             builder.Services.AddSingleton<MatchScoreCalculationService>();
             builder.Services.AddSingleton<MatchFinishingService>();
             builder.Services.AddSingleton<FinishedMatchProcessingService>();
             builder.Services.AddSingleton<MatchValidator>();
-            builder.Services.AddSingleton<PlayerValidator>();
-            builder.Services.AddSingleton<MatchProcessor>();
-            builder.Services.AddSingleton<PlayerProcessor>();
-            builder.Services.AddSingleton<ErrorDtoBuilder>();
             builder.Services.AddSingleton<MatchParser>();
-            builder.Services.AddSingleton<PlayerParser>();
 
+            builder.Services.AddSingleton<ErrorDtoBuilder>();
+            builder.Services.AddSingleton<StatusCodeProcessor>();
+            
             builder.Services.AddSingleton<PageProcessor>();
             builder.Services.AddSingleton<PageValidator>();
             builder.Services.AddSingleton<PageParser>();
 
-            builder.Services.AddSingleton<MatchPageViewDtoBuilder>();
-
             builder.Services.Configure<PaginationSettings>(builder.Configuration.GetSection("Pagination"));
-
+            builder.Services.AddSingleton<MatchPageViewDtoBuilder>();
             builder.Services.AddSingleton<MatchPageViewCalculator>();
             builder.Services.AddSingleton<MatchPageViewService>();
             builder.Services.AddSingleton<MatchesSummaryService>();
-
 
             builder.Services.AddDbContextFactory<AppDbContext>(options =>
             {
@@ -65,7 +64,6 @@ namespace TennisScoreboard
         public void ConfigureRouting(WebApplication app)
         {
             app.UseRouting();
-
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
