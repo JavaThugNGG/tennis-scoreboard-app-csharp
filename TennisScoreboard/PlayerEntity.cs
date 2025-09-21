@@ -12,9 +12,9 @@ namespace TennisScoreboard
         [Required]
         public string Name { get; set; }
 
-        public List<MatchEntity> MatchesAsPlayer1 { get; set; } = new List<MatchEntity>();
-        public List<MatchEntity> MatchesAsPlayer2 { get; set; } = new List<MatchEntity>();
-        public List<MatchEntity> MatchesWon { get; set; } = new List<MatchEntity>();
+        public List<MatchEntity> MatchesAsPlayer1 { get; set; } = new();
+        public List<MatchEntity> MatchesAsPlayer2 { get; set; } = new();
+        public List<MatchEntity> MatchesWon { get; set; } = new();
 
         public PlayerEntity() { }
 
