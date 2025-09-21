@@ -14,11 +14,11 @@ namespace TennisScoreboard
 
         public void Init(WebApplication app)
         {
-            using var db = _factory.CreateDbContext();
-            db.Database.EnsureCreated();
+            using var context = _factory.CreateDbContext();
+            context.Database.EnsureCreated();
 
-            Debug.WriteLine("Таблицы в базе:");
-            var tables = db.Model.GetEntityTypes()
+            Debug.WriteLine("Таблицы в базе:");//в лог
+            var tables = context.Model.GetEntityTypes()
                 .Select(t => t.GetTableName())
                 .Distinct();
 
