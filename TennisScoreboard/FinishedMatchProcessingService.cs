@@ -1,7 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-
-namespace TennisScoreboard
+﻿namespace TennisScoreboard
 {
     public class FinishedMatchProcessingService
     {
