@@ -78,7 +78,7 @@ namespace TennisScoreboard
 
             try
             {       
-                lock (currentMatch.Lock)
+                lock (currentMatch.MatchStateLock)
                 {
                     _matchScoreCalculationService.Scoring(currentMatch, scorerSide);
                     _matchStateService.EnsureNotFinished(currentMatch);
@@ -93,7 +93,7 @@ namespace TennisScoreboard
 
         private IActionResult HandleFinishedMatch(MatchScoreModel currentMatch, PlayerSide scorerSide, Guid matchGuid)
         {
-            lock (currentMatch.Lock)
+            lock (currentMatch.MatchStateLock)
             {
                 FinishedMatchViewDto finishedMatch = _finishedMatchProcessingService.HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
                 currentMatch.Finished = true;

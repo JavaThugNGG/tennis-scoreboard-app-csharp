@@ -21,7 +21,7 @@
 
         public bool Finished { get; set; }
 
-        public readonly object Lock = new object();//изначально непонятно кому предназначается блокировка
+        public readonly object MatchStateLock = new object();
 
         public MatchScoreModel(int firstPlayerId, int secondPlayerId)
         {
