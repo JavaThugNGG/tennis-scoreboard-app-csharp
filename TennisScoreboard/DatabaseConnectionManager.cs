@@ -19,15 +19,12 @@ namespace TennisScoreboard
             _connection.Open();
             return _connection;
         }
-
+        
         public void Dispose()
         {
             try
             {
-                if (_connection != null)
-                {
-                    _connection.Dispose();
-                }
+                _connection?.Dispose();
             }
             catch (Exception ex)
             {
