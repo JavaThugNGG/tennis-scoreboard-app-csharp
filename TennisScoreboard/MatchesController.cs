@@ -25,7 +25,6 @@ namespace TennisScoreboard
             {
                 //лог
                 matchPage = _matchPageViewService.GetPageWithoutFilter(page);
-                Response.StatusCode = 400;
                 ViewData["ErrorMessage"] = ex.Message;
             }
             return View("Matches", matchPage);

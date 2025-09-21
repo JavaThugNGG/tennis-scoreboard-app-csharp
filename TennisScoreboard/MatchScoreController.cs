@@ -48,14 +48,12 @@ namespace TennisScoreboard
                 MatchScoreModel currentMatch = _matchProcessor.FindMatch(_ongoingMatchesService.CurrentMatches, parsedGuid);
                 return View(currentMatch);
             }
-            
             catch (ArgumentException ex)
             {
                 return HandleIllegalArguments(ex);
             }
         }
 
-        
         [HttpPost]
         public IActionResult Scoring(string guid, string scoredPlayerId)
         {
@@ -86,9 +84,8 @@ namespace TennisScoreboard
                     _matchStateService.EnsureNotFinished(currentMatch);
                     return RedirectToAction("ShowScore", new { guid = matchGuid });
                 }
-
             }
-            catch (MatchAlreadyFinishedException ex)
+            catch (MatchAlreadyFinishedException)
             {
                 return HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
             }
@@ -99,19 +96,15 @@ namespace TennisScoreboard
             lock (currentMatch.Lock)
             {
                 FinishedMatchViewDto finishedMatch = _finishedMatchProcessingService.HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
-
-                    currentMatch.Finished = true;
-                    //тут логгер
-                    return View("MatchResult", finishedMatch);
-                
+                currentMatch.Finished = true;
+                //тут логгер
+                return View("MatchResult", finishedMatch);
             }
         }
 
-        
         private IActionResult HandleIllegalArguments(Exception ex)
         {
             ViewData["ErrorMessage"] = ex.Message;
-            Response.StatusCode = 400;
             return View();
         }
     }
