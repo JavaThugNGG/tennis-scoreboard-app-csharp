@@ -69,10 +69,12 @@ namespace TennisScoreboard
         public void ConfigureApplicationLifetime(WebApplication app)
         {
             var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+            var ongoingMatchesService = app.Services.GetRequiredService<OngoingMatchesService>();
             var dbConnectionManager = app.Services.GetRequiredService<DatabaseConnectionManager>();
 
             lifetime.ApplicationStopping.Register(() =>
             {
+                ongoingMatchesService.ShutdownScheduler();
                 dbConnectionManager.Dispose();
             });
         }
