@@ -22,7 +22,7 @@
             {
                 return _playerService.Insert(playerName).Id;
             }
-            catch (PlayerAlreadyExistsException ex)
+            catch (PlayerAlreadyExistsException)
             {
                 return _playerService.GetByName(playerName).Id;
             }
