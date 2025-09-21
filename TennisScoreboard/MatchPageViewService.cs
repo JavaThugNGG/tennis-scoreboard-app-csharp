@@ -18,7 +18,17 @@
             _playerValidator = playerValidator;
         }
 
-        public MatchPageViewDto GetPage(string page, string? playerNameFilter)
+        public MatchPageViewDto GetPageWithFilter(string page, string playerNameFilter)
+        {
+            return GetPage(page, playerNameFilter);
+        }
+
+        public MatchPageViewDto GetPageWithoutFilter(string page)
+        {
+            return GetPage(page, null);
+        }
+
+        private MatchPageViewDto GetPage(string page, string? playerNameFilter)
         {
             int currentPage = _pageProcessor.DeterminePage(page);
             int paginationStartIndex = _matchPageViewCalculator.GetStartIndex(currentPage);

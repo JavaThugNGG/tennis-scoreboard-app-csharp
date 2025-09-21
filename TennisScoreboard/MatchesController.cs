@@ -19,22 +19,16 @@ namespace TennisScoreboard
 
             try
             {
-                matchPage = _matchPageViewService.GetPage(page, playerNameFilter);
+                matchPage = _matchPageViewService.GetPageWithFilter(page, playerNameFilter);
             }
             catch (IllegalPlayerNameFilterException ex)
             {
                 //лог
-                matchPage = GetPageWithoutFilter(page);
-
+                matchPage = _matchPageViewService.GetPageWithoutFilter(page);
                 Response.StatusCode = 400;
                 ViewData["ErrorMessage"] = ex.Message;
             }
             return View("Matches", matchPage);
-        }
-
-        private MatchPageViewDto GetPageWithoutFilter(string page)
-        {
-            return _matchPageViewService.GetPage(page, null);
         }
     }
 }
