@@ -30,12 +30,11 @@ namespace TennisScoreboard
                 MatchScoreModel matchScoreModel = _matchPreparingService.PersistPlayers(playerOne, playerTwo);
                 Guid pastedMatchId = _ongoingMatchesService.AddMatch(matchScoreModel);
                 //тут логгер
-                return Redirect($"/match-score?guid={pastedMatchId}");// TODO:перепишешь потом через RedirectToAction когда контроллер другой появится
+                return RedirectToAction("ShowScore", "MatchScore", new { guid = pastedMatchId });
             }
             catch (IllegalPlayerNameException ex)
             {
                 ViewData["ErrorMessage"] = ex.Message;
-                Response.StatusCode = 400;
                 //тут логгер
                 return View("NewMatch");
             }
