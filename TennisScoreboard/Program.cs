@@ -1,4 +1,7 @@
-﻿namespace TennisScoreboard
+﻿using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
+
+namespace TennisScoreboard
 {
     namespace TennisScoreboard
     {
@@ -8,22 +11,41 @@
             {
                 var builder = WebApplication.CreateBuilder(args);
 
-                var startUp = new Startup();
-                startUp.ConfigureServices(builder);
+                Log.Logger = new LoggerConfiguration()
+                    .MinimumLevel.Debug()
+                    .WriteTo.Console(theme: AnsiConsoleTheme.Code)
+                    .CreateLogger();
 
-                var app = builder.Build();
+                builder.Host.UseSerilog();
 
-                using (var scope = app.Services.CreateScope())
+                try
                 {
-                    var initializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
-                    initializer.Init(app);
+                    var startUp = new Startup();
+                    startUp.ConfigureServices(builder);
+
+                    var app = builder.Build();
+
+                    using (var scope = app.Services.CreateScope())
+                    {
+                        var initializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
+                        initializer.Init(app);
+                    }
+
+                    startUp.ConfigureStaticFiles(app);
+                    startUp.ConfigureRouting(app);
+                    startUp.ConfigureApplicationLifetime(app);
+
+                    app.Run();
                 }
-
-                startUp.ConfigureStaticFiles(app);
-                startUp.ConfigureRouting(app);
-                startUp.ConfigureApplicationLifetime(app);
-
-                app.Run();
+                catch (Exception ex)
+                {
+                    Log.Fatal(ex, "Application terminated unexpectedly");
+                    throw;
+                }
+                finally
+                {
+                    Log.CloseAndFlush();
+                }
             }
         }
     }
