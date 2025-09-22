@@ -10,7 +10,7 @@
 
         public void Scoring(MatchScoreModel match, PlayerSide scorerSide)
         {
-            PlayerSide opponentSide = OpponentOf(scorerSide);
+            PlayerSide opponentSide = PlayerSideProcessor.OpponentOf(scorerSide);
             var scorer = new MatchScoreModelWrapper(match, scorerSide);
             var opponent = new MatchScoreModelWrapper(match, opponentSide);
 
@@ -125,18 +125,6 @@
             match.SecondPlayerPoints = TennisPoint.Love;
             match.FirstPlayerAdvantage = false;
             match.SecondPlayerAdvantage = false;
-        }
-
-        private PlayerSide OpponentOf(PlayerSide scorerSide)
-        {
-            if (scorerSide == PlayerSide.First)
-            {
-                return PlayerSide.Second;
-            } 
-            else
-            {
-                return PlayerSide.First;
-            }
         }
     }
 }
