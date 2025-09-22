@@ -45,6 +45,7 @@ namespace TennisScoreboard
             builder.Services.AddSingleton<MatchPageViewCalculator>();
             builder.Services.AddSingleton<MatchPageViewService>();
             builder.Services.AddSingleton<MatchesSummaryService>();
+            builder.Services.AddSingleton<MatchScheduler>();
 
             builder.Services.AddDbContextFactory<AppDbContext>(options =>
             {
