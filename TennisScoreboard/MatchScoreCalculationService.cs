@@ -2,11 +2,6 @@
 {
     public class MatchScoreCalculationService
     {
-        private static readonly int DefaultPoints = 0;
-        private static readonly int PointsFirst = 15;
-        private static readonly int PointsSecond = 30;
-        private static readonly int PointsThird = 40;
-
         private static readonly int DefaultGames = 0;
         private static readonly int GamesToWinSet = 6;
         private static readonly int GamesWinDiff = 2;
@@ -29,19 +24,19 @@
 
         private void UpdatePoints(MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent, MatchScoreModel match)
         {
-            if (scorer.Points == DefaultPoints)
+            if (scorer.Points == TennisPoint.Love)
             {
-                scorer.Points = PointsFirst;
+                scorer.Points = TennisPoint.Fifteen;
             }
-            else if (scorer.Points == PointsFirst)
+            else if (scorer.Points == TennisPoint.Fifteen)
             {
-                scorer.Points = PointsSecond;
+                scorer.Points = TennisPoint.Thirty;
             }
-            else if (scorer.Points == PointsSecond)
+            else if (scorer.Points == TennisPoint.Thirty)
             {
-                scorer.Points = PointsThird;
+                scorer.Points = TennisPoint.Forty;
             }
-            else if (scorer.Points == PointsThird)
+            else if (scorer.Points == TennisPoint.Forty)
             {
                 HandleFortyPoints(scorer, opponent, match);
             }
@@ -53,7 +48,7 @@
 
         private void HandleFortyPoints(MatchScoreModelWrapper scorer, MatchScoreModelWrapper opponent, MatchScoreModel match)
         {
-            if (opponent.Points < PointsThird)
+            if (opponent.Points < TennisPoint.Forty)
             {
                 UpdateGames(scorer, opponent, match);
             } else
@@ -126,8 +121,8 @@
 
         private void ResetPointsAndAdvantage(MatchScoreModel match)
         {
-            match.FirstPlayerPoints = DefaultPoints;
-            match.SecondPlayerPoints = DefaultPoints;
+            match.FirstPlayerPoints = TennisPoint.Love;
+            match.SecondPlayerPoints = TennisPoint.Love;
             match.FirstPlayerAdvantage = false;
             match.SecondPlayerAdvantage = false;
         }
