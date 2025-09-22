@@ -3,6 +3,12 @@
     public class MatchScheduler : IDisposable
     {
         private readonly List<CancellationTokenSource> _tasks = new();
+        private readonly ILogger<MatchScheduler> _logger;
+
+        public MatchScheduler(ILogger<MatchScheduler> logger)
+        {
+            _logger = logger;
+        }
 
         public void ScheduleAction(Action action, int delaySeconds)
         {
@@ -14,7 +20,14 @@
                 {
                     if (!t.IsCanceled)
                     {
-                        action();
+                        try
+                        {
+                            action();
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Exception occurred while executing scheduled action");
+                        }
                     }
                 }, TaskScheduler.Default);
         }
@@ -26,11 +39,13 @@
                 cts.Cancel();
             }
             _tasks.Clear();
+            _logger.LogInformation("Cancelled {Count} scheduled tasks", _tasks.Count);
         }
 
         public void Dispose()
         {
             CancelAll();
+            _logger.LogInformation("Scheduler disposed");
         }
     }
 
