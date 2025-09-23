@@ -6,11 +6,13 @@ namespace TennisScoreboard
     {
         private readonly IDbContextFactory<AppDbContext> _contextFactory;
         private readonly PlayerDao _playerDao;
+        private readonly ILogger<PlayerService> _logger;
 
-        public PlayerService(IDbContextFactory<AppDbContext> contextFactory, PlayerDao playerDao)
+        public PlayerService(IDbContextFactory<AppDbContext> contextFactory, PlayerDao playerDao, ILogger<PlayerService> logger)
         {
             _contextFactory = contextFactory;
             _playerDao = playerDao;
+            _logger = logger;
         }
 
         public PlayerEntity GetByName(string name)
@@ -22,7 +24,7 @@ namespace TennisScoreboard
             }
             catch (Exception ex)
             {
-                //тут лог
+                _logger.LogError(ex, "Error getting player by name: {}", name);
                 throw;
             }
         }
@@ -43,12 +45,11 @@ namespace TennisScoreboard
                 {
                     throw new PlayerAlreadyExistsException(name);
                 }
-
                 throw; 
             }
             catch (Exception ex)
             {
-                //тут лог
+                _logger.LogWarning(ex, "Error inserting player by name: {}", name);
                 throw;
             }
         }
