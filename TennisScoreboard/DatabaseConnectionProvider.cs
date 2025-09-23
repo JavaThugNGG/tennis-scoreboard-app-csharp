@@ -2,15 +2,15 @@
 
 namespace TennisScoreboard
 {
-    public class DatabaseConnectionManager : IDisposable
+    public class DatabaseConnectionProvider : IDisposable
     {
         private readonly string _connectionString;
         private readonly SqliteConnection _connection;
-        private readonly ILogger<DatabaseConnectionManager> _logger;
+        private readonly ILogger<DatabaseConnectionProvider> _logger;
 
         public SqliteConnection Connection => _connection;
 
-        public DatabaseConnectionManager(string connectionString, ILogger<DatabaseConnectionManager> logger)
+        public DatabaseConnectionProvider(string connectionString, ILogger<DatabaseConnectionProvider> logger)
         {
             _connectionString = connectionString;
             _connection = new SqliteConnection(_connectionString);

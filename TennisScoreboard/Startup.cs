@@ -19,10 +19,10 @@ namespace TennisScoreboard
                                    ?? throw new InvalidOperationException("Connection string 'Default' not found!");
             _logger.LogInformation("Using database connection string: {ConnectionString}", connectionString);
 
-            builder.Services.AddSingleton<DatabaseConnectionManager>(sp =>
+            builder.Services.AddSingleton<DatabaseConnectionProvider>(sp =>
             {
-                var logger = sp.GetRequiredService<ILogger<DatabaseConnectionManager>>();
-                var manager = new DatabaseConnectionManager(connectionString, logger);
+                var logger = sp.GetRequiredService<ILogger<DatabaseConnectionProvider>>();
+                var manager = new DatabaseConnectionProvider(connectionString, logger);
                 manager.OpenPersistent();
                 return manager;
             });
@@ -30,7 +30,7 @@ namespace TennisScoreboard
             builder.Services.AddDbContextFactory<AppDbContext>(options =>
             {
                 var dbManager = builder.Services.BuildServiceProvider()
-                    .GetRequiredService<DatabaseConnectionManager>();
+                    .GetRequiredService<DatabaseConnectionProvider>();
                 options.UseSqlite(dbManager.Connection);
             });
 
@@ -85,7 +85,7 @@ namespace TennisScoreboard
         {
             var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
             var ongoingMatchesService = app.Services.GetRequiredService<OngoingMatchesService>();
-            var dbConnectionManager = app.Services.GetRequiredService<DatabaseConnectionManager>();
+            var dbConnectionManager = app.Services.GetRequiredService<DatabaseConnectionProvider>();
 
             lifetime.ApplicationStopping.Register(() =>
             {
