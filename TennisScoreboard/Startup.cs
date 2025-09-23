@@ -11,10 +11,21 @@ namespace TennisScoreboard
             var connectionString = builder.Configuration.GetConnectionString("Default")
                                    ?? throw new InvalidOperationException("Connection string 'Default' not found!");
 
-            var dbConnectionManager = new DatabaseConnectionManager(connectionString);
-            dbConnectionManager.OpenPersistent();
+            builder.Services.AddSingleton<DatabaseConnectionManager>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<DatabaseConnectionManager>>();
+                var manager = new DatabaseConnectionManager(connectionString, logger);
+                manager.OpenPersistent();
+                return manager;
+            });
 
-            builder.Services.AddSingleton(dbConnectionManager);
+            builder.Services.AddDbContextFactory<AppDbContext>(options =>
+            {
+                var dbManager = builder.Services.BuildServiceProvider()
+                    .GetRequiredService<DatabaseConnectionManager>();
+                options.UseSqlite(dbManager.Connection);
+            });
+
             builder.Services.AddSingleton<DatabaseInitializer>();
 
             builder.Services.AddSingleton<PlayerValidator>();
@@ -46,11 +57,6 @@ namespace TennisScoreboard
             builder.Services.AddSingleton<MatchPageViewService>();
             builder.Services.AddSingleton<MatchesSummaryService>();
             builder.Services.AddSingleton<MatchScheduler>();
-
-            builder.Services.AddDbContextFactory<AppDbContext>(options =>
-            {
-                options.UseSqlite(connectionString);
-            });
         }
 
         public void ConfigureStaticFiles(WebApplication app)
