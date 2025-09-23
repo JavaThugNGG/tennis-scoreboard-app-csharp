@@ -4,12 +4,20 @@ namespace TennisScoreboard
 {
     public class Startup
     {
+        private readonly ILogger<Startup> _logger;
+
+        public Startup(ILogger<Startup> logger)
+        {
+            _logger = logger;
+        }
+
         public void ConfigureServices(WebApplicationBuilder builder)
         {
             builder.Services.AddControllersWithViews();
 
             var connectionString = builder.Configuration.GetConnectionString("Default")
                                    ?? throw new InvalidOperationException("Connection string 'Default' not found!");
+            _logger.LogInformation("Using database connection string: {ConnectionString}", connectionString);
 
             builder.Services.AddSingleton<DatabaseConnectionManager>(sp =>
             {

@@ -21,7 +21,11 @@ namespace TennisScoreboard
                 try
                 {
                     Log.Information("Starting TennisScoreboard application");
-                    var startUp = new Startup();
+
+                    using var loggerFactory = LoggerFactory.Create(lb => lb.AddSerilog());
+                    var logger = loggerFactory.CreateLogger<Startup>();
+
+                    var startUp = new Startup(logger);
                     startUp.ConfigureServices(builder);
 
                     var app = builder.Build();
