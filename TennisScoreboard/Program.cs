@@ -20,6 +20,7 @@ namespace TennisScoreboard
 
                 try
                 {
+                    Log.Information("Starting TennisScoreboard application");
                     var startUp = new Startup();
                     startUp.ConfigureServices(builder);
 
@@ -27,13 +28,16 @@ namespace TennisScoreboard
 
                     using (var scope = app.Services.CreateScope())
                     {
+                        Log.Information("Initializing database...");
                         var initializer = scope.ServiceProvider.GetRequiredService<DatabaseInitializer>();
                         initializer.Init(app);
+                        Log.Information("Database initialized successfully");
                     }
 
                     startUp.ConfigureStaticFiles(app);
                     startUp.ConfigureRouting(app);
                     startUp.ConfigureApplicationLifetime(app);
+                    Log.Information("Application configured. Running...");
 
                     app.Run();
                 }
