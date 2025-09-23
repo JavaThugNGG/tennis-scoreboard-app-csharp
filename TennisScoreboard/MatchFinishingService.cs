@@ -6,11 +6,13 @@ namespace TennisScoreboard
     {
         private readonly IDbContextFactory<AppDbContext> _contextFactory;
         private readonly OngoingMatchesService _ongoingMatchesService;
+        private readonly ILogger<MatchFinishingService> _logger;
 
-        public MatchFinishingService(IDbContextFactory<AppDbContext> contextFactory, OngoingMatchesService ongoingMatchesService)
+        public MatchFinishingService(IDbContextFactory<AppDbContext> contextFactory, OngoingMatchesService ongoingMatchesService, ILogger<MatchFinishingService> logger)
         {
             _contextFactory = contextFactory;
             _ongoingMatchesService = ongoingMatchesService;
+            _logger = logger;
         }
 
         public PlayersResultDto PersistMatch(MatchScoreModel match, PlayerSide winner, Guid matchGuid)
@@ -42,7 +44,7 @@ namespace TennisScoreboard
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine($"Error persisting match between players {firstPlayerId} and {secondPlayerId}: {e.Message}");
+                _logger.LogError(e, "Error persisting match between players {} and {}", firstPlayerId, secondPlayerId);
                 throw;
             }
         }
