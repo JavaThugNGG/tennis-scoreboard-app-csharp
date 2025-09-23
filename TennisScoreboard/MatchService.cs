@@ -6,11 +6,13 @@ namespace TennisScoreboard
     {
         private readonly IDbContextFactory<AppDbContext> _contextFactory;
         private readonly MatchDao _matchDao;
+        private readonly ILogger<MatchService> _logger;
 
-        public MatchService(IDbContextFactory<AppDbContext> contextFactory, MatchDao matchDao)
+        public MatchService(IDbContextFactory<AppDbContext> contextFactory, MatchDao matchDao, ILogger<MatchService> logger)
         {
             _contextFactory = contextFactory;
             _matchDao = matchDao;
+            _logger = logger;
         }
 
         public IList<MatchEntity> GetPage(int matchesPerPage, int startIndex)
@@ -22,7 +24,7 @@ namespace TennisScoreboard
             }
             catch (Exception ex)
             {
-                //тут лог
+                _logger.LogError(ex, "error getting page of matches with start index: {}, matches per page: {}", startIndex, matchesPerPage);
                 throw;
             }
         }
@@ -36,7 +38,7 @@ namespace TennisScoreboard
             }
             catch (Exception ex)
             {
-                //лог
+                _logger.LogError(ex, "Error getting count of matches");
                 throw;
             }
         }
@@ -50,7 +52,7 @@ namespace TennisScoreboard
             }
             catch (Exception ex)
             {
-                //лог
+                _logger.LogError(ex, "Error getting page of matches with player filter: {}, player id: {}, matches per page: {}, start index: {}", player.Name, player.Id, matchesPerPage, startIndex);
                 throw;
             }
         }
@@ -64,7 +66,7 @@ namespace TennisScoreboard
             }
             catch (Exception ex)
             {
-                //лог
+                _logger.LogError(ex, "Error getting count matches with player filter: {}, player id: {}", player.Name, player.Id);
                 throw;
             }
         }
