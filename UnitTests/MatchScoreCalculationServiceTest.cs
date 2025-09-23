@@ -1,4 +1,7 @@
 ﻿using TennisScoreboard;
+using TennisScoreboard.Models;
+using TennisScoreboard.Processors;
+using TennisScoreboard.Services;
 
 
 namespace UnitTests

@@ -1,4 +1,5 @@
-﻿@model TennisScoreboard.MatchPageViewDto
+﻿@using TennisScoreboard.Dto
+@model MatchPageViewDto
 @{
     var matchPage = Model.MatchAttributes;
     int currentPage = Model?.CurrentPage ?? 1;
