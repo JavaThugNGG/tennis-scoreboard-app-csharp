@@ -19,12 +19,14 @@ namespace TennisScoreboard
         private readonly MatchProcessor _matchProcessor;
         private readonly PlayerProcessor _playerProcessor;
 
+        private readonly ILogger<MatchScoreController> _logger;
+
         public MatchScoreController(OngoingMatchesService ongoingMatchesService, MatchStateService matchStateService,
             MatchScoreCalculationService matchScoreCalculationService,
             FinishedMatchProcessingService finishedMatchProcessingService, MatchValidator matchValidator,
             PlayerValidator playerValidator,
             MatchParser matchParser, PlayerParser playerParser, MatchProcessor matchProcessor,
-            PlayerProcessor playerProcessor)
+            PlayerProcessor playerProcessor, ILogger<MatchScoreController> logger)
         {
             _ongoingMatchesService = ongoingMatchesService;
             _matchStateService = matchStateService;
@@ -36,6 +38,7 @@ namespace TennisScoreboard
             _playerParser = playerParser;
             _matchProcessor = matchProcessor;
             _playerProcessor = playerProcessor;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -69,6 +72,7 @@ namespace TennisScoreboard
             }
             catch (ArgumentException ex)
             {
+                _logger.LogWarning("incorrect match uuid or scoredId: {} {}", guid, scoredPlayerId);
                 return HandleIllegalArguments(ex);
             }
 
@@ -82,6 +86,7 @@ namespace TennisScoreboard
                 {
                     _matchScoreCalculationService.Scoring(currentMatch, scorerSide);
                     _matchStateService.EnsureNotFinished(currentMatch);
+                    _logger.LogInformation("match is scoring: first player id {}, second player id {}, scoring by id: {}", currentMatch.FirstPlayerId, currentMatch.SecondPlayerId, scoredPlayerId);
                     return RedirectToAction("ShowScore", new { guid = matchGuid });
                 }
             }
@@ -97,7 +102,7 @@ namespace TennisScoreboard
             {
                 FinishedMatchViewDto finishedMatch = _finishedMatchProcessingService.HandleFinishedMatch(currentMatch, scorerSide, matchGuid);
                 currentMatch.Finished = true;
-                //тут логгер
+                _logger.LogInformation("match is finished: first player id {}, second player id {}", finishedMatch.CurrentMatch.FirstPlayerId, finishedMatch.CurrentMatch.SecondPlayerId);
                 return View("MatchResult", finishedMatch);
             }
         }
